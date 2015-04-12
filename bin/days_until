@@ -1,0 +1,22 @@
+#!/usr/bin/python2
+
+import sys
+import datetime
+
+def main(args = None):
+    if args is None:
+       args = sys.argv
+
+    [year, month, day] = map(int, args[1].split('-'))
+
+    now = datetime.datetime.now()
+    then = datetime.datetime(year, month, day)
+
+    delta = then - now
+
+    print delta.days
+
+    return 0
+
+if __name__ == '__main__':
+   sys.exit(main())

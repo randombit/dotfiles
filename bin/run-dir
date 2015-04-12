@@ -1,0 +1,62 @@
+#!/bin/bash
+
+export TMPDIR=${TMPDIR:-/tmp}
+CRONDIR=$TMPDIR/cron-$RANDOM-$$
+
+HOSTNAME=$(hostname -s)
+OWNER=$(whoami)
+NICE=nice
+PATH=/bin:/usr/bin:/usr/local/bin:$HOME/bin
+
+umask 077
+
+# keep going if something fails
+set +e
+
+if [ $# -ne 1 ]; then
+   echo "Usage: run-dir <dir>"
+   exit 1
+fi
+
+# Just ignore the case where the directory doesn't exist for whatever reason
+if [ ! -e $1 ]; then
+   exit 1
+fi
+
+# Exists, but not a directory: complain
+if [ ! -d $1 ]; then
+   echo "Not a directory: $1"
+   exit 1
+fi
+
+mkdir $CRONDIR >/dev/null 2>&1
+
+if [ ! -d $CRONDIR -o ! -O $CRONDIR -o ! -w $CRONDIR -o ! -x $CRONDIR ]
+then
+   echo "ATTACK: Someone is trying to mess with $CRONDIR"
+   exit 1
+fi
+
+if [ -L $CRONDIR ]; then
+   echo "ATTACK: Someone is trying symlink attacks on $CRONDIR"
+   exit 1
+fi
+
+for i in $1/*; do
+   if [ ! -f $i ]; then
+      continue
+   fi
+   OUTPUTFILE=$CRONDIR/$(basename $i).output
+   $NICE $i 2>&1 >$OUTPUTFILE
+   x=$(basename $i)
+   if [ -s $OUTPUTFILE ]; then
+      SUBJECT="Cronjob \"$x\" output ($HOSTNAME)"
+      cat $OUTPUTFILE | mail -s "$SUBJECT" $OWNER
+   fi
+   rm -f $OUTPUTFILE
+done
+
+rmdir $CRONDIR
+
+exit 0
+

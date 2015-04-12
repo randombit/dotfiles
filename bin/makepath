@@ -1,0 +1,49 @@
+#!/usr/bin/perl -w
+
+use strict;
+use Sys::Hostname;
+
+exit main(@ARGV);
+
+sub main {
+    my $config = shift || 'path';
+    my @others = split(/:/, shift || '');
+
+    my $file = $config;
+    $file = "$ENV{HOME}/conf/mkpath/$config.conf" unless(-f $file);
+
+    open FILE, "<$file" or die "Couldn't read $file ($!)\n";
+
+    my $hostname = hostname;
+
+    $hostname =~ s/\..*//; # short version
+
+    my @path = ();
+
+    LINE: while(<FILE>) {
+        chomp;
+        s/#.*//;
+        next unless $_;
+
+        foreach my $dir (split(/\s+/, $_)) {
+            $dir =~ s/HOME/$ENV{HOME}/g;
+            $dir =~ s/TMPDIR/$ENV{TMPDIR}/g;
+            $dir =~ s/HOSTNAME/$hostname/g;
+            if(-d $dir and -x $dir and -r $dir) {
+                push @path, $dir;
+                @others = grep { $_ ne $dir } @others;
+                next LINE;
+            } elsif($dir =~ /\.jar/ and -f $dir and -r $dir) {
+                push @path, $dir;
+                @others = grep { $_ ne $dir } @others;
+                next LINE;
+            }
+        }
+    }
+
+    print join(':', @path);
+    print ':', join(':', @others) if @others;
+    print "\n";
+
+    return 0;
+}

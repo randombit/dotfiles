@@ -1,0 +1,14 @@
+# Screen configuration
+
+
+startup_message off
+
+#chdir
+#nethack on
+deflogin on
+escape ^Ww
+#nonblock 5
+
+bind h hardcopy
+bind k kill
+

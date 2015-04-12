@@ -1,0 +1,122 @@
+#!/usr/bin/python
+
+import sys
+import optparse
+import subprocess
+import re
+
+def num_cpus():
+    try:
+        import multiprocessing
+        return multiprocessing.cpu_count()
+    except (ImportError,NotImplementedError):
+        pass
+
+    try:
+        import os
+        res = int(os.sysconf('SC_NPROCESSORS_ONLN'))
+
+        if res > 0:
+            return res
+    except (AttributeError,ValueError):
+        pass
+
+    return 1
+
+def get_flac_tags(filename):
+    (stdout,stderr) = subprocess.Popen(
+        ['metaflac', '--export-tags-to=-', filename],
+        stdout=subprocess.PIPE).communicate()
+
+    tags = {}
+    regexp = re.compile('^([a-zA-Z]+)=(.*)')
+    for line in stdout.split('\n'):
+        match = regexp.match(line)
+        if match is None:
+            continue
+
+        tags[match.group(1).lower()] = match.group(2)
+
+    return tags
+
+# Non-recursive list flattening
+def flatten(l):
+    return sum(l, [])
+
+def gen_filename_from(flac):
+    return flac.replace('.flac', '.mp3')
+
+def convert_flac(flac, lame_encoder_opts):
+    def lame_option_for(tag, lameopt):
+        if tag not in tags:
+            return []
+        return ['--' + lameopt, tags[tag]]
+
+    flac_tag_to_lame_opt = {
+        'album': 'tl',
+        'artist': 'ta',
+        'date': 'ty',
+        'title': 'tt',
+        'tracknumber': 'tn',
+        }
+
+    def format_tracknumber(tracknumber):
+        if re.match("[0-9]+$", tracknumber):
+            return int(tracknumber)
+        elif re.match("[0-9]+/[0-9]+$", tracknumber):
+            return int(tracknumber.split('/')[0])
+        else:
+            raise Exception("Weird track number " + tracknumber)
+
+    tags = get_flac_tags(flac)
+
+    lame_opts = flatten([lame_option_for(tag, lameopt) for
+                         (tag, lameopt) in flac_tag_to_lame_opt.items()])
+    outfile = "%02d - %s.mp3" % (format_tracknumber(tags['tracknumber']),
+                                 tags['title'])
+
+    lame_command = ['lame'] + lame_encoder_opts.split(' ') + \
+                   lame_opts + ['-', outfile]
+    flac_command = ['flac', '-d', flac, '-o', '-']
+
+    devnull = open('/dev/null', 'w')
+
+    flac_proc = subprocess.Popen(flac_command,
+                                 stdout=subprocess.PIPE,
+                                 stderr=devnull)
+    lame_proc = subprocess.Popen(lame_command,
+                                 stdin=flac_proc.stdout,
+                                 stderr=devnull,
+                                 stdout=devnull)
+    return lame_proc
+
+def main(argv = None):
+    if argv is None:
+        argv = sys.argv
+
+    parser = optparse.OptionParser()
+
+    parser.add_option('--concurrency', default=num_cpus(), metavar='N',
+                      help='Number of encoders to run in parallel (%default)')
+    parser.add_option('--lame-options', default='-V0 --add-id3v2',
+                      metavar='OPT',
+                      help='Options for lame encoding (%default)')
+
+    (options, args) = parser.parse_args(argv)
+
+    procs = []
+    for flac in args[1:]:
+        procs.append(convert_flac(flac, options.lame_options))
+
+        while(len(procs) > options.concurrency):
+            procs[0].wait()
+            procs = procs[1:]
+
+    while(len(procs) > 0):
+        procs[0].wait()
+        procs = procs[1:]
+
+    return 0
+
+if __name__ == '__main__':
+    sys.exit(main())

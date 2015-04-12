@@ -1,0 +1,118 @@
+#!/usr/bin/perl -w
+
+use strict;
+use File::Spec;
+use Sys::Hostname;
+
+my $CONFIG_DIR = File::Spec->catdir($ENV{"HOME"}, 'conf');
+
+sub get_hostname {
+    my $name = Sys::Hostname->hostname;
+    $name =~ s/^([a-z0-9]+)\..*/$1/;
+    return $name;
+}
+
+sub read_config {
+    my ($file) = @_;
+
+    open CONFIG, "<$file" or die "Couldn't read $file ($!)\n";
+
+    my @conf;
+
+    while(<CONFIG>) {
+        my $line = $_;
+
+        chomp $line;
+
+        my ($host_spec, $when, $name) = split(/ +/, $line);
+
+        next unless $host_spec && $when && $name;
+
+        push @conf, [$host_spec, $when, $name];
+    }
+    return @conf;
+}
+
+sub host_matches
+{
+    my ($host_spec) = @_;
+    my $hostname = get_hostname();
+
+    return 1 if($host_spec eq "all");
+    return 1 if($host_spec eq $hostname);
+
+    my $negated = 0;
+
+    if($host_spec =~ /^all!/)
+    {
+        $host_spec =~ s/^all!//;
+        $negated = 1;
+    }
+
+    foreach my $box (split(/,/, $host_spec))
+    {
+        return !$negated if($box eq $hostname);
+    }
+
+    return $negated;
+}
+
+sub should_run {
+
+    my ($arg_dir, $arg_when, $conf) = @_;
+
+    my $host_spec = @{$conf}[0];
+    my $when = @{$conf}[1];
+    my $bin = @{$conf}[2];
+
+    return 0 unless host_matches($host_spec);
+    return 0 if($when ne $arg_when);
+
+    return 1;
+}
+
+sub main {
+    if(scalar(@ARGV) != 1) {
+        die "Usage: $0 when\n";
+    }
+
+    my $when = $ARGV[0];
+    my $CRON_DIR = File::Spec->catdir($CONFIG_DIR, 'crontab', $when);
+
+    die "$CRON_DIR is not a readable directory\n"
+        unless(-d $CRON_DIR && -r $CRON_DIR);
+
+    my @conf = read_config(File::Spec->catfile($CONFIG_DIR, 'cron.cfg'));
+
+    foreach my $config (@conf) {
+        next unless should_run($CRON_DIR, $when, $config);
+
+        my $bin = @{$config}[2];
+
+        my $path = File::Spec->catfile($CRON_DIR, $bin);
+
+        unless(-e $path) {
+            warn "Cronjob $path doesn't exist\n";
+            next;
+        }
+
+        unless(-x $path) {
+            warn "Cronjob $path is not executable\n";
+            next;
+        }
+
+        my $pipe_cmd = "nice $path |";
+
+        open COMMAND_OUTPUT, $pipe_cmd or die "Couldn't run '$pipe_cmd'";
+
+        my $output = '';
+
+        while(<COMMAND_OUTPUT>) { $output .= $_; }
+
+        my $hostname = get_hostname();
+
+        print "\n**** Job '$path' output on host '$hostname' is:\n$output" unless($output eq '');
+    }
+}
+
+main();

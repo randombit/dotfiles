@@ -1,0 +1,9 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my $total = 0;
+
+while(<>) { $total += $_; }
+
+print $total,"\n";

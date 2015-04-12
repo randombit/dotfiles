@@ -1,0 +1,200 @@
+# File names and so forth
+set folder=~/var/mail
+set record=+sent-mail
+set postponed=+postponed-msgs
+
+set from=lloyd@randombit.net
+set hostname=randombit.net
+#alternates lloyd@(acm.|cs.|)jhu.edu
+
+# Options
+set abort_nosubject=no
+set abort_unmodified=no
+set alias_file=~/conf/mutt/addressbook
+set beep=no
+#set charset="utf-8"
+set check_new=yes
+set confirmappend=no
+set editor="emacs -nw"
+set encode_from=yes
+set fast_reply=no
+set fcc_clear=yes
+set include=yes
+set mime_forward=ask-yes
+set nosave_name
+set sleep_time=0
+set pager_stop=yes
+set markers=no
+set sort=date-received
+#set sortbrowser=alpha
+set user_agent=yes
+set sort_browser=unsorted
+set pgp_create_traditional=yes
+set tilde=yes
+set timeout=60
+set mailcap_path=$HOME/conf/mailcap.rc
+set check_mbox_size=yes
+
+# Display formatting
+set hdr_format="%Z %3C %{%b %d} %-25.25a (%5c) %s"
+set folder_format="%2C %N %d         (%8s)  %f"
+set index_format="%Z %3C %{%b %d} %-25.25F (%4l) %s"
+set to_chars=" ++CF "
+
+# Addressbook
+source ~/conf/mutt/addressbook
+
+# List of mailboxes
+mailboxes =Priority =Unsorted
+mailboxes `mailfolders ~/var/mail/SystemAdmin`
+mailboxes `mailfolders ~/var/mail/Work`
+mailboxes =Projects/Botan =Projects/Botan-Devel =Projects/Bugs =Projects/GitHub
+mailboxes `mailfolders ~/var/mail/FDN`
+mailboxes =Mailman =Mailman-Owner
+mailboxes =Spam =BigFiles
+mailboxes `mailfolders ~/var/mail/Lists`
+mailboxes =sent-mail
+
+# Header control
+ignore *
+unignore From:
+unignore To:
+unignore Date:
+unignore Subject:
+unignore Cc:
+
+hdr_order From: To: Date: Subject: Cc:
+
+# Custom headers
+my_hdr X-PGP-Fingerprint: 4E60 C735 51AF 2188 DF0A  5A62 78E9 8043 5712 3B60
+#my_hdr X-PGP-Key: http://www.randombit.net/pgpkey.html
+
+# MIME stuff
+auto_view text/html
+alternative_order text/plain text/enriched text text/html
+
+# Macros
+macro browser < "<first-entry><enter>"
+#macro browser q "<quit><change-folder>"
+
+macro pager i "<change-folder>?<toggle-mailboxes>"
+macro pager i "<change-folder>?<toggle-mailboxes>"
+macro pager l "<exit><change-folder>?<toggle-mailboxes>"
+
+macro index l "<change-folder>?<toggle-mailboxes>"
+macro index < "<change-folder>?<toggle-mailboxes>"
+
+macro index "\Cx" \
+"<tag-pattern>~N<enter><tag-prefix><toggle-new><tag-prefix><clear-flag>*" \
+"Mark all boring new msgs"
+
+# Keybindings for Pine-ish behavior
+bind generic < previous-entry
+bind generic p previous-entry
+bind generic > next-entry
+bind generic n next-entry
+bind generic - previous-page
+bind generic <space> next-page
+
+bind browser <space> next-page
+bind browser <tab> noop
+bind browser \Cn check-new
+
+bind index p previous-entry
+bind index n next-entry
+bind index A create-alias
+bind index <enter> display-message
+bind index ' ' next-page
+bind index c mail
+bind index g change-folder
+bind index w search
+bind index x sync-mailbox
+bind index $ sort-mailbox
+bind index a tag-prefix
+bind index \; tag-entry
+bind index q quit
+bind index C change-folder
+#bind index l limit
+
+bind pager ' ' next-page
+bind pager c mail
+bind pager C change-folder
+bind pager w search
+bind pager y print-message
+bind pager \n noop
+bind pager <up> previous-line
+bind pager <down> next-line
+bind pager p previous-entry
+bind pager n next-entry
+bind pager q quit
+bind pager i exit
+
+bind compose \Cx send-message
+bind compose \Co postpone-message
+
+#macro index ) "|sa-learn --ham --no-sync\n" "Learns mail as NOTSPAM"
+#macro pager ) "|sa-learn --ham --no-sync\n" "Learns mail as NOTSPAM"
+
+macro index ( "|sa-learn --spam --no-sync\n" "Learns mail as SPAM"
+macro pager ( "|sa-learn --spam --no-sync\n" "Learns mail as SPAM"
+
+# List of lists
+subscribe fdn@fdntech.com
+subscribe fdn-tech@fdntech.com
+subscribe prion@fdntech.com
+subscribe prioncorp@fdntech.com
+
+subscribe botan-devel@randombit.net
+subscribe botan-announce@randombit.net
+subscribe gcc@gcc.gnu.org
+subscribe libstdc++@gcc.gnu.org
+lists secdir@mit.edu
+subscribe saag@mit.edu
+subscribe golang-nuts@googlegroups.com
+subscribe p2p-hackers@lists.zooko.com
+subscribe cryptography@metzdowd.com
+subscribe monotone-devel@nongnu.org
+subscribe cfrg@ietf.org
+subscribe tls@ietf.org
+
+# Color scheme
+color normal white default
+color indicator brightblue default
+color status black blue
+color error brightred default
+color hdrdefault brightblue default
+color header brightcyan default ^From:
+color header brightcyan default ^Subject:
+
+color quoted cyan default
+color quoted1 green default
+color quoted2 blue default
+color quoted3 cyan default
+color quoted4 green default
+color quoted5 blue default
+
+# PGP handling
+send-hook . "unset pgp_autoencrypt pgp_autosign"
+send-hook cutlass@synacklabs.net "set pgp_autoencrypt pgp_autosign"
+#send-hook botan-dev@randombit.net "set pgp_autosign"
+#send-hook botan-announce@randombit.net "set pgp_autosign"
+
+# GPG command stuff
+set pgp_autosign=no
+#set pgp_sign_as=0x7C9CF175
+set pgp_replyencrypt=yes
+set pgp_timeout=1800
+set pgp_good_sign="^gpg: Good signature from"
+
+set pgp_decode_command="gpg %?p?--passphrase-fd 0? --no-verbose --quiet --batch --output - %f"
+set pgp_verify_command="gpg --no-verbose --quiet --batch --output - --verify %s %f"
+set pgp_decrypt_command="gpg --passphrase-fd 0 --quiet --no-verbose --batch --output - %f"
+set pgp_sign_command="gpg --no-verbose --quiet --batch --output - --passphrase-fd 0 --armor --detach-sign --textmode %?a?-u %a? %f"
+set pgp_clearsign_command="gpg --no-verbose --quiet --batch --output - --passphrase-fd 0 --armor --textmode --clearsign %?a?-u %a? %f"
+set pgp_encrypt_only_command="pgpewrap gpg --batch --quiet --no-verbose --output - --encrypt --textmode --armor --always-trust -- -r %r -- %f"
+set pgp_encrypt_sign_command="pgpewrap gpg --passphrase-fd 0 --batch --quiet --no-verbose --textmode --output - --encrypt --sign %?a?-u %a? --armor --always-trust -- -r %r -- %f"
+set pgp_import_command="gpg --no-verbose --import -v %f"
+set pgp_export_command="gpg --no-verbose --export --armor %r"
+set pgp_verify_key_command="gpg --no-verbose --batch --fingerprint --check-sigs %r"
+set pgp_list_pubring_command="gpg --no-verbose --batch --with-colons --list-keys %r"
+set pgp_list_secring_command="gpg --no-verbose --batch --with-colons --list-secret-keys %r"

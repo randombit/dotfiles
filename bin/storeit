@@ -1,0 +1,10 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+my $stuff = '';
+
+while(<>) { $stuff .= $_; }
+
+print $stuff;
+

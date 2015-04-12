@@ -1,0 +1,35 @@
+/*
+Useful library of functions for bc
+Jack Lloyd (lloyd@acm.jhu.edu)
+
+This may only work with GNU bc.
+*/
+
+define l2(x) { return (l(x) / l(2)); }
+
+define ln(x, n) { return (l(x) / l(n)); }
+
+define f(x) {
+  if (x <= 1) return (1);
+  return (f(x-1) * x);
+}
+
+define pi() { return (4 * a(1)); }
+
+define abs(x) { if(x < 0) return -x; return x; }
+
+define gcd(x,y) {
+  if(x < y) { return gcd(y,x); }
+  n=scale;
+  scale=0;
+  while(y > 0)
+    {
+    r = x % y;
+    x = y;
+    y = r;
+    }
+  scale=n;
+  return x;
+}
+
+define lcm(x,y) { return ((x * y) / gcd(x, y)); }

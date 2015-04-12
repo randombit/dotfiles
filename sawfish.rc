@@ -1,0 +1,67 @@
+(setq load-path (cons (canonical-file-name "~/conf/sawfish/lisp") load-path))
+
+(require 'sawfish-defaults)
+
+(define-special-variable default-frame-style 'microGUI)
+(define-special-variable place-window-mode 'first-fit-or-interactive)
+(define-special-variable focus-mode 'enter-only)
+(define-special-variable decorate-transients t)
+(define-special-variable error-handler-beep nil)
+
+(define-special-variable root-menu
+  `(("Programs" . apps-menu)
+    ("Open Windows" . window-menu)
+    ()
+    ("Nap Time!" (system "sudo hibernate-ram &"))
+    ()
+    ("Restart Sawfish" restart)
+    ("Lock Screen" (system "xscreensaver-command -lock &"))
+    ("Quit" quit)
+   )
+)
+
+(define-special-variable apps-menu
+  `(
+    ("Chrome" (system "chromium &"))
+    ("Firefox" (system "firefox-bin &"))
+    ("VirtualBox" (system "VirtualBox &"))
+    ("Quod Libet" (system "quodlibet &"))
+    ("Evince PDF" (system "evince &"))
+    ("Emacs" (system "emacs &"))
+    ("Terminal" (system "xterm -ls +sb &"))
+   )
+)
+
+(bind-keys global-keymap
+  "M-TAB" 'cycle-windows
+  "F12" 'popup-root-menu
+  "M-F1" '(activate-workspace 1)
+  "M-F2" '(activate-workspace 2)
+  "M-F3" '(activate-workspace 3)
+  "M-F4" '(activate-workspace 4)
+  "M-F5" '(activate-workspace 5)
+  "M-F6" '(activate-workspace 6)
+  "M-F7" '(activate-workspace 7)
+  "M-F8" '(activate-workspace 8)
+  "M-Right" 'next-workspace
+  "M-Left" 'previous-workspace
+  "M-S" 'toggle-window-sticky
+  "M-E" '(run-shell-command "emacs")
+  "M-F9" '(run-shell-command "xterm -ls +sb -geometry 80x50")
+  ;"M-F" '(run-shell-command "firefox-bin")
+  ;"M-L" '(run-shell-command "xlock")
+)
+
+(bind-keys window-keymap
+  "Button1-Click" 'raise-and-pass-through-click
+  ;"M-p" 'maximize-window
+  "M-Button1-Move" 'move-window-interactively
+  "M-Button2-Click" 'popup-window-menu
+  "M-Button3-Click" 'raise-lower-window
+  "M-Down" 'lower-window
+  "M-Up" 'raise-window
+)
+
+(bind-keys root-window-keymap
+  "Button3-Click" 'popup-root-menu
+)

@@ -1,0 +1,14 @@
+#!/bin/sh
+
+#DESKTOP_FILE="/home/lloyd/tim.jpg"
+#SCALE=90
+
+BASE_ARGS="--color #000000 --color2 #000033 --vgradient"
+FILE_ARGS="--center-x --center-y --scale-width=$SCALE --scale-height=$SCALE"
+
+if [ -f $DESKTOP_FILE ]
+then
+  xsri $BASE_ARGS $FILE_ARGS $DESKTOP_FILE
+else
+  xsri $BASE_ARGS
+fi

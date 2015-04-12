@@ -1,0 +1,127 @@
+#!/usr/bin/python
+
+import sys, os, re, errno
+
+class Problem(Exception):
+    def __init__(self, msg):
+        self.msg = msg
+
+def in_dir():
+    return "CDs"
+
+def output_dir():
+    return "MP3_OUT"
+
+def should_encode(input, output):
+    in_stat = None
+    try:
+        in_stat = os.stat(input)
+    except OSError, info:
+        if info[0] == errno.ENOENT:
+            sys.stderr.write("Couldn't find '" + input + "'\n")
+        else:
+            raise OSError, info
+
+    try:
+        out_stat = os.stat(output)
+
+        if in_stat is None:
+            return False
+        if out_stat is None:
+            return True
+
+        if out_stat.st_mtime > in_stat.st_mtime:
+            #sys.stderr.write("File '" + output +
+            #                 "' seems to be as newer than '" +
+            #                 input + "', skipping\n")
+            return False
+    except OSError, info:
+        if info[0] != errno.ENOENT:
+            raise OSError, info
+
+    return True
+
+def encode_it((input, output)):
+    if should_encode(input, output):
+        matches = re.search("(.*)/(.*)/(.*)/.*", output)
+        if matches is None:
+            raise Problem("Output file didn't match regex: " + output)
+        print "mkdir -p '%s/%s/%s'" % (matches.group(1), matches.group(2), matches.group(3))
+        print "encode_flac \"" + input + "\" \"" + output + "\"";
+
+def encoding_suffix():
+    return ".mp3"
+
+def is_playlist(filename):
+    return (filename == "playlist.m3u")
+
+def find_playlists(dir):
+    all_lists = []
+    for root, dirs, files in os.walk(dir):
+        dirs[0:] = [x for x in dirs if x != output_dir()]
+        files[0:] = [x for x in files if is_playlist(x)]
+        all_lists.extend([os.path.join(root, file) for file in files])
+    all_lists.sort()
+    return all_lists
+
+def mkdirs(newdir):
+    if os.path.isdir(newdir):
+        pass
+    elif os.path.isfile(newdir):
+        raise OSError("a file with the same name as the desired " \
+                      "dir, '%s', already exists." % newdir)
+    else:
+        head, tail = os.path.split(newdir)
+        if head and not os.path.isdir(head):
+            mkdirs(head)
+        if tail:
+            os.mkdir(newdir)
+
+def make_new_playlist(list):
+    def output_name(input):
+        return input.replace(".flac", encoding_suffix())
+    return "\n".join(map(output_name, list))
+
+def save_playlist(filename, contents):
+    output = open(filename, "w")
+    output.write(contents + "\n")
+
+def decide_paths(dir, playlist_name):
+    def output_name(input):
+        return os.path.join(
+            output_dir(), dir,
+            input.replace(".flac", encoding_suffix())
+            )
+
+    playlist = open(os.path.join(in_dir(), dir, playlist_name));
+    if playlist is None:
+        raise Problem("Couldn't read " + playlist_name)
+
+    listing = map(lambda x : x.strip(), playlist.readlines())
+
+    save_playlist(os.path.join(output_dir(), dir, "playlist.m3u"),
+                  make_new_playlist(listing))
+
+    new_names = map(output_name, listing)
+    return zip(map(lambda x : os.path.join(in_dir(), dir, x), listing), new_names)
+
+def encode_album(playlist):
+    matches = re.search(in_dir() + "/(.*)/(.*)/([a-zA-Z0-9._-]*)$", playlist);
+    if matches is None:
+        raise Problem("Playlist name doesn't match our regex: " + playlist)
+    [band,album,playlist] = matches.group(1, 2, 3)
+    mkdirs(os.path.join(output_dir(), band, album));
+    map(encode_it,
+        decide_paths(os.path.join(band, album), playlist));
+
+def main(argv = None):
+    if argv is None:
+        argv = sys.argv
+    try:
+        map(encode_album, find_playlists(in_dir()))
+    except Problem, err:
+        print err.msg
+        return 2
+
+if __name__ == "__main__":
+    sys.exit(main())

@@ -1,0 +1,74 @@
+#!/usr/bin/python
+
+import datetime
+import random
+import calendar
+import sys
+
+"""
+Miller-Rabin compositness check
+"""
+def miller_rabin_check(a, n):
+    d = n - 1
+    s = 0
+    while d % 2 == 0:
+        d >>= 1
+        s += 1
+
+    a_to_power = pow(a, d, n)
+    if a_to_power == 1:
+        return True
+    for i in range(s-1):
+        if a_to_power == n - 1:
+            return True
+        a_to_power = (a_to_power * a_to_power) % n
+    return a_to_power == n - 1
+
+"""
+List of small primes for fast checking
+"""
+SMALL_PRIMES = [
+    2, 3, 5, 7, 11, 13, 17, 19, 23, 27, 29, 31, 37, 41, 43, 47, 53, 59, 61]
+
+def is_prime(n):
+
+    # Simple cases first
+    if n <= 1:
+        return False
+
+    for mod in SMALL_PRIMES:
+        if n % mod == 0:
+            return False
+
+    for i in range(20):
+        a = 0
+        while a == 0:
+            a = random.randrange(n)
+        if not miller_rabin_check(a, n):
+            return False
+    return True
+
+def main(args = None):
+    if args is None:
+        args = sys.argv
+
+    day_names = calendar.weekheader(3).split(' ')
+
+    days_to_look = int(args[1]) if len(args) >= 2 else 365
+
+    today = datetime.date.today()
+
+    ref_point = today
+
+    for i in range(0, days_to_look):
+        day = today + datetime.timedelta(i)
+        day_as_int = int('%d%02d%02d' % (day.year, day.month, day.day))
+        if is_prime(day_as_int):
+            day_of_week = calendar.weekday(day.year, day.month, day.day)
+            days_to = (day-ref_point).days
+
+            print("%2d %s %s" % (days_to, day, day_names[day_of_week]))
+            #ref_point = day
+
+if __name__ == '__main__':
+    sys.exit(main())

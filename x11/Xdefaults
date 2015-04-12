@@ -1,0 +1,46 @@
+! emacs, xemacs
+
+Emacs*Background: DarkSlateGray
+Emacs*Foreground: Wheat
+Emacs*pointerColor: Orchid
+Emacs*cursorColor: Orchid
+Emacs*bitmapIcon: on
+! Emacs*font: fixed
+Emacs.font: Bitstream Vera Sans Mono-9
+Emacs*.geometry: 80x40
+Emacs*.menuBar: on
+Emacs*.toolBar: on
+Emacs*.verticalScrollBars: on
+Emacs*.BorderWidth: 0
+Emacs*.title: Emacs
+
+! xterm (and friends)
+
+! Fix the meta key
+xterm*metaSendsEscape: true
+
+*VT100*utf8:            1
+*VT100*eightBitInput:   false
+*VT100*eightBitControl: false
+*VT100*eightBitOutput:  true
+
+XTerm*faceSize: 20
+
+! XTerm*Title: Terminal
+XTerm*Background: Black
+XTerm*Foreground: White
+
+XTerm*highlightSelection:  true
+XTerm*VT100*colorBDMode:  on
+XTerm.VT100*colorULMode:  on
+
+XTerm.VT100.titeInhibit:  true
+
+XTerm.VT100*dynamicColors:  on
+XTerm*saveLines:	0
+xterm*reverseWrap:	true
+
+*visualBell:		false
+*scrollTtyOutput:	False
+*scrollKey:		True
+Scrollbar.JumpCursor:	True

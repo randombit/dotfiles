@@ -1,0 +1,26 @@
+#!/usr/bin/env python
+
+import sys
+
+def hexize(contents):
+    hexcontents = ''.join(map(lambda s: s.encode('hex').upper(),
+                              contents))
+
+    lines = []
+    for i in range(0, len(hexcontents), 64):
+        left = i + min(len(hexcontents) - i, 64)
+        lines.append(hexcontents[i:left])
+
+    return '\\\n'.join(lines)
+
+def main(args = None):
+    if args is None:
+        args = sys.argv
+
+    if len(args) > 1:
+        print hexize(open(args[1]).readlines())
+    else:
+        print hexize(sys.stdin.readlines())
+
+if __name__ == '__main__':
+    sys.exit(main())

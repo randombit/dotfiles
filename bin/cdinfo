@@ -1,0 +1,24 @@
+#!/bin/bash
+
+if [ $1 ]; then
+   if [ ! -e $1 ]; then
+      echo "$1 does not exist"
+      exit
+   fi
+   RD=$1
+else
+   RD=/dev/cdrom
+fi
+
+for i in 32768,7   32776,32 32808,32 32958,128 33086,128 33214,128 \
+         33342,128 33470,32 33581,16 33598,16  33615,16  33632,16
+do
+   old_IFS="$IFS"
+   IFS=","
+   set -- $i
+   IFS="$old_IFS"
+   OFFSET=$1
+   LENGTH=$2
+   echo "*`dd if=$RD bs=1 skip=$OFFSET count=$LENGTH 2> /dev/null`#"
+done
+

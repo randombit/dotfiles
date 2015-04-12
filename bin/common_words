@@ -1,0 +1,63 @@
+#!/usr/bin/python
+
+import sys
+import heapq
+
+def wordcounts(input, ignorable):
+   counts = {}
+
+   def cleanup_words(word):
+      junk = [',', '.', ':', ';', '-']
+      for j in junk:
+         word = word.replace(j, '')
+      return word.lower()
+
+   for line in input:
+      for word in map(lambda s: s.strip(), cleanup_words(line).split(' ')):
+         if word not in ignorable:
+            counts[word] = counts.setdefault(word, 0) + 1
+   return counts
+
+def top_n(cnts, n):
+    top_n = []
+
+    smallest = None
+
+    for (word,cnt) in cnts.items():
+        if len(top_n) < n:
+            top_n.append(cnt)
+            if len(top_n) == n:
+                heapq.heapify(top_n)
+                smallest = heapq.nsmallest(1, top_n)[0]
+        else:
+            if cnt > smallest:
+                heapq.heapreplace(top_n, cnt)
+                smallest = heapq.nsmallest(1, top_n)[0]
+
+    common_words = {}
+
+    for (word, cnt) in cnts.items():
+       if cnt in top_n and cnt > 2:
+          common_words[word] = cnt
+    return common_words
+
+def main(args = None):
+   if args is None:
+      args = sys.argv
+
+   ignorable = [
+      '', '-',
+      'a', 'an', 'and', 'as',
+      'for', 'in', 'is', 'of', 'or', 'the', 'to']
+
+   for file in args[1:]:
+      cnts = wordcounts(open(file), ignorable)
+      common = top_n(cnts, 15)
+
+      for (word,cnt) in sorted(common.items(),
+                               key=lambda x: x[1],
+                               reverse=True):
+         print cnt, word
+
+if __name__ == '__main__':
+   sys.exit(main())

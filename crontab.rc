@@ -1,0 +1,11 @@
+5  * * * *   $HOME/conf/bin/run_crontabs hourly
+10 1 * * *   $HOME/conf/bin/run_crontabs daily
+20 1 * * 1   $HOME/conf/bin/run_crontabs weekly
+
+15 0 * * 1   $HOME/conf/bin/run_crontabs day/monday
+15 0 * * 2   $HOME/conf/bin/run_crontabs day/tuesday
+15 0 * * 3   $HOME/conf/bin/run_crontabs day/wednesday
+15 0 * * 4   $HOME/conf/bin/run_crontabs day/thursday
+15 0 * * 5   $HOME/conf/bin/run_crontabs day/friday
+15 0 * * 6   $HOME/conf/bin/run_crontabs day/saturday
+15 0 * * 7   $HOME/conf/bin/run_crontabs day/sunday

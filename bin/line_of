@@ -1,0 +1,26 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+sub line_of {
+    my($fh,$line) = @_;
+
+    my $cnt = 0;
+
+    my $res = undef;
+    while(<$fh>) {
+        $cnt++;
+        $res = $_ if($cnt == $line);
+    }
+    return $res;
+}
+
+die "Usage: $0 file line\n" unless($#ARGV == 1);
+
+my $file = $ARGV[0];
+my $line = $ARGV[1];
+
+die "Bad line number '$line'\n" unless($line > 0);
+open FILE, $file or die "Couldn't read $file ($!)\n";
+
+print line_of(\*FILE, $line);

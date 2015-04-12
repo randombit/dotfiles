@@ -1,0 +1,21 @@
+#!/usr/bin/python
+
+import os
+
+def read_wordlist():
+    wl = {}
+    for i in open('diceware.txt').readlines():
+        (k,v) = i.strip().split('\t')
+        wl[k] = v
+    return wl
+
+wl = read_wordlist()
+
+def dice():
+    return 1 + (ord(os.urandom(1)) % 6)
+
+def dice5():
+    return ''.join(map(str, [dice() for i in range(5)]))
+
+for i in range(8):
+    print wl[dice5()], 

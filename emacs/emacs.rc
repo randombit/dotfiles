@@ -1,0 +1,105 @@
+;; Emacs -*- mode: Lisp -*- code
+
+(setq load-path (cons "~/conf/emacs/" load-path))
+(setq load-path (cons "~/conf/emacs/fsharp-mode" load-path))
+(setq load-path (cons "~/conf/emacs/slime-2.0" load-path))
+
+(load "/usr/share/emacs/site-lisp" t)
+;(load "/usr/share/emacs/site-lisp/site-gentoo" t)
+
+(load "jl-utils")
+
+
+(setq inferior-lisp-program
+  (first-true 'file-executable-p
+              '("/usr/bin/sbcl" "/usr/bin/clisp" "~/opt/bin/sbcl")))
+
+(if (not (null inferior-lisp-program))
+  (condition-case err
+    (progn
+      (require 'slime)
+      (slime-setup))
+  (error nil)))
+
+(defun maybe-broadway-style ()
+   (when (and buffer-file-name (string-match "bway" buffer-file-name))
+     (c-set-style "broadway")))
+
+(add-hook 'c++-mode-hook 'maybe-broadway-style)
+
+(semantic-mode 1)
+
+;;; Keybindings
+(global-set-key "\M-g" 'goto-line)
+(global-set-key "\C-x\C-m" 'execute-extended-command)
+
+;;; Disable menus and misc junk
+(if (fboundp 'scroll-bar-mode) (scroll-bar-mode -1))
+(if (fboundp 'tool-bar-mode) (tool-bar-mode -1))
+(if (fboundp 'menu-bar-mode) (menu-bar-mode -1))
+
+;;; Enable some commands
+(put 'upcase-region 'disabled nil)
+(put 'downcase-region 'disabled nil)
+(put 'narrow-to-region 'disabled nil)
+(put 'erase-buffer 'disabled nil)
+
+;;; Toggles
+(setq-default show-trailing-whitespace t)
+
+;(setq track-eol t)
+
+;(global-font-lock-mode -1)
+
+(setq-default indent-tabs-mode nil)
+
+(setq vc-handled-backends (remq 'Mtn vc-handled-backends))
+
+(setq default-major-mode 'text-mode)
+(setq inhibit-startup-message t)
+(setq case-fold-search nil)
+(setq auto-save-list-file-prefix "~/var/tmp/emacs/")
+(setq make-backup-files nil)
+(setq fill-column 80)
+
+(setq display-time-string-forms '(year "-" month "-" day " " 24-hours ":" minutes))
+(display-time)
+
+;(require 'rust-mode)
+;(require 'clojure-mode)
+;(require 'go-mode)
+
+(autoload 'fsharp-mode "fsharp" "Major mode for editing F# code." t)
+(autoload 'run-fsharp "inf-fsharp" "Run an inferior F# process." t)
+
+(defun add-mode-alist (match mode)
+  (push (cons match mode) auto-mode-alist))
+
+(add-mode-alist "\\.h\\'" 'c++-mode)
+(add-mode-alist "\\.cu\\'" 'c++-mode)
+(add-mode-alist "\\.go\\'" 'go-mode)
+(add-mode-alist "\\.cgi\\'" 'perl-mode)
+(add-mode-alist "\\.php\\'" 'html-mode)
+(add-mode-alist "\\.rs\\'" 'rust-mode)
+(add-mode-alist "\\.cs\\'" 'csharp-mode)
+(add-mode-alist "\\.xml\\'" 'text-mode)
+(add-mode-alist "\\.fs[iylx]?$" 'fsharp-mode)
+
+(autoload 'fsharp-mode "fsharp" "F# major mode" t)
+(autoload 'inferior-fsharp "inf-fsharp" "Inferior F# process" t)
+
+(add-mode-alist "\\.SConscript\\'" 'python-mode)
+(add-mode-alist "SConscript" 'python-mode)
+(add-mode-alist "SConstruct" 'python-mode)
+
+(setq-default ispell-program-name "aspell")
+
+(load "jl-indent")
+
+(add-hook 'c-mode-common-hook 'set_styles)
+(add-hook 'c++-mode-common-hook 'set_styles)
+(add-hook 'java-mode-common-hook 'set_styles)
+
+(custom-set-variables
+ '(rst-level-face-base-color "null")
+)

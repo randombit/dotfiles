@@ -1,0 +1,127 @@
+# Attr: 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
+# Fore: 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+# Back: 40=black 41=red 42=green 43=yellow 44=blue 45=magenta 46=cyan 47=white
+
+NORMAL  00
+FILE    00
+DIR     37;44
+LINK    1;36
+FIFO    1;33
+SOCK    1;33
+BLK     30;46
+CHR     30;46
+ORPHAN  1;05;31
+MISSING 1;05;31
+
+EXEC    1;32
+
+# 37337 programming stuff
+.c         1;34
+.cc        1;34
+.h         1;34
+.cpp       1;34
+.hpp       1;34
+.cu        1;34
+.icc       1;34
+.pl        1;34
+.sh        1;34
+.cgi       1;34
+.sql       1;34
+.java      1;34
+.scala     1;34
+.py        1;34
+.S         1;34
+.s         1;34
+.ml        1;34
+.el        1;34
+.awk       1;34
+.cs        1;34
+.lisp      1;34
+.scm       1;34
+
+# HTML/SGML/PHP/TeX/LaTeX/ASCII files
+.txt       36
+.rst       36
+.tex       36
+.html      36
+.css       36
+.sgml      36
+.php       36
+.log       36
+.dif       36
+.diff      36
+.htm       36
+.rtf       36
+
+# Encrypted files
+.asc       36
+.pgp       36
+
+# Configuration files
+.spec      34
+.conf      34
+.rc        34
+.cron      34
+.ini       34
+.cfg       34
+
+# Non-human-readable documents
+.dvi       1;35
+.ps        1;35
+.pdf       1;35
+.doc       1;35
+
+# Archives/Compressed
+.rpm       32
+.gz        32
+.bz2       32
+.tar       32
+.tgz       32
+.tbz       32
+.zip       32
+
+# Object files, etc
+.o         33
+.a         33
+.so        33
+.class     33
+.pyc       33
+.exe       33
+.dll       33
+
+# Misc binary files
+.gpg       33
+.db        33
+.mtn       33
+
+# Disk Images
+.iso       30;47
+.img       30;47
+
+# Graphic formats
+.png       35
+.jpg       35
+.xcf       35
+.xpm       35
+.gif       35
+.ico       35
+
+# Video formats
+.mpg       30;45
+.mpeg      30;45
+.vob       30;45
+.avi       30;45
+.asf       30;45
+.swf       30;45
+.rm        30;45
+.wmv       30;45
+.mov       30;45
+.ogm       30;45
+
+# Sound formats
+.mp3       30;44
+.ogg       30;44
+.flac      30;44
+.m3u       30;44
+.au        30;44
+.wav       30;44

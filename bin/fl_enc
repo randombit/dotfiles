@@ -1,0 +1,99 @@
+#!/usr/bin/perl -w
+
+use strict;
+
+# The titles_file is a file with a list (one / line) of the titles of the songs
+# on the CD. Input is assumed to be named either trackNN.cdda.wav (like how
+# cdparanoia dumps them with -B), or the song names (SomeSongName.wav).
+# Spaces, etc, are fine. No quoting unless it's actually part of the name.
+
+# Easy way to get this file: take the CDDB file for the CD and:
+#    $ cat CDDB_FILE | grep TTITLE | cut -d '=' -f 2- > TITLES
+
+# Other arguments are simple strings
+
+# Jack Lloyd (lloyd@randombit.met)
+
+if($#ARGV != 2 && $#ARGV != 3)
+{
+    print "Usage: fl_enc titles_file artist cd_name cd_year\n",
+          "       encode artist cd_name cd_year:\n",
+          "         Use default titles_file \"TITLES\"\n";
+    exit 1;
+}
+
+my $TITLES_FILE;
+my $ARTIST;
+my $CDNAME;
+my $CDYEAR;
+
+if($#ARGV == 3)
+{
+    $TITLES_FILE = $ARGV[0];
+    $ARTIST = $ARGV[1];
+    $CDNAME = $ARGV[2];
+    $CDYEAR = $ARGV[3];
+}
+else
+{
+    $TITLES_FILE = 'TITLES';
+    $ARTIST = $ARGV[0];
+    $CDNAME = $ARGV[1];
+    $CDYEAR = $ARGV[2];
+}
+
+open TITLES, $TITLES_FILE or die "Couldn't read $TITLES_FILE ($!)\n";
+open PLAYLIST, '>playlist.m3u' or die "Couldn't write playlist.m3u ($!)\n";
+
+while(<TITLES>)
+{
+    chomp;
+    print PLAYLIST $_,".flac\n";
+}
+
+close TITLES;
+close PLAYLIST;
+
+open TITLES, $TITLES_FILE or die "Couldn't read $TITLES_FILE ($!)\n";
+
+my $tracknum = 1;
+while(<TITLES>)
+{
+    chomp;
+    my $tr = $tracknum;
+    if($tracknum < 10) { $tr = '0'.$tr; }
+    my $title = $_;
+
+    if( -e $title . '.flac')
+    {
+        print $title, ".flac already exists, skipping\n";
+    }
+    else
+    {
+        if( -e "track$tr.cdda.wav" )
+        {
+            flac_enc("track$tr.cdda.wav", $title, $tracknum,
+                   $ARTIST, $CDNAME, $CDYEAR);
+        }
+        elsif( -e "$title.wav" )
+        {
+            flac_enc("$title.wav", $title, $tracknum,
+                   $ARTIST, $CDNAME, $CDYEAR);
+        }
+    }
+    $tracknum++;
+}
+
+sub flac_enc
+{
+    my ($file, $title, $tr, $artist, $cdname, $cdyear) = @_;
+    my @FLAC_OPTS = ('-8', '-V', "-TALBUM=$cdname",
+                     "-TDATE=$cdyear",
+                     "-TARTIST=$artist",
+                     "-TTRACKNUMBER=$tr",
+                     "-TTITLE=$title",
+                     '-o',"$title.flac",
+                     $file
+                     );
+    system('flac', @FLAC_OPTS) == 0 or die "Couldn't call flac program\n";
+}

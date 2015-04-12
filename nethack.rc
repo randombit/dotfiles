@@ -1,0 +1,4 @@
+OPTIONS=color
+#OPTIONS=autopickup:off
+OPTIONS=catname:Preston,dogname:Cojiro,horsename:Trigger,hilite_pet
+OPTIONS=fruit:quince,name:Lloyd

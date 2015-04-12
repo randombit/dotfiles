@@ -1,0 +1,39 @@
+#!/usr/bin/perl -w
+
+use strict;
+use File::Spec;
+use File::Find;
+
+my $HOME = $ENV{'HOME'};
+my $maildir = File::Spec->catdir($HOME, 'var/mail');
+
+exit 1 unless(-d $maildir);
+
+my @files;
+File::Find::find(
+   sub { push @files, $File::Find::name if -f $File::Find::name },
+   $maildir
+);
+
+sub is_interesting {
+    my $file = $_[0];
+
+    return 0 if($file =~ /sent-mail/);
+    return 0 if($file =~ /postponed/);
+    return 0 if($file =~ /draft/);
+
+    return 0 if($file =~ /spamassassin.lock/);
+    return 0 if($file =~ /procmail.log/);
+    return 0 if($file =~ /\/\./);
+    return 0 if($file =~ /_MTN/);
+    return 0 if($file =~ /msgid\.dat/);
+
+    return 0 if($file =~ /Spam/);
+    return 0 if($file =~ /Archive/);
+    return 0 if($file =~ /Lists/);
+    return 1;
+}
+
+my @boxes = grep { is_interesting($_); } @files;
+
+print join(':', @boxes), "\n";
