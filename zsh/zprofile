@@ -6,6 +6,8 @@ export LOGDIR=$HOME/var/log
 export PATH=$($CONF_DIR/bin/makepath path)
 export ZSH_DIR=$CONF_DIR/zsh
 
+export GOPATH=$HOME/opt/go
+
 bindkey -e
 export VISUAL=emacs-nox
 export EDITOR=emacs-nox
@@ -29,6 +31,7 @@ setopt hist_reduce_blanks
 setopt hist_ignore_space
 setopt hist_save_no_dups
 setopt hist_verify
+unsetopt nomatch
 
 umask 022
 
@@ -65,7 +68,6 @@ export GNUPGHOME=$HOME/var/gnupg
 export LESSCOLOR=0
 export MANSECT="2:3:1:8:4:5:6:7:9:n:pm:l:p:o"
 
-export BWAY_LOCAL_VARS=$HOME/bway/local.SConscript
 export BOTAN_MTN_DB=$HOME/var/mtn/botan.mtn
 export MTN_MERGE=emacs
 
@@ -83,7 +85,7 @@ if [ -f $LSCOLORSRC ]; then
 fi
 unset LSCOLORSRC
 
-alias reload_profile="unalias -m '*'; source ~/.zshenv"
+alias reload_profile="unalias -m '*'; source ~/conf/zsh/zshenv"
 
 # Aliases for programs
 if [ $OSTYPE = "linux-gnu" ]; then
@@ -94,7 +96,7 @@ if [ $OSTYPE = "linux-gnu" ]; then
    alias df="df -T -h -x devtmpfs -x tmpfs"
    alias free="free -mt"
 
-   alias less='less --no-lessopen -n --quit-if-one-screen'
+   alias less='less --no-lessopen -n'
    alias nice='ionice -c 3 nice'
 #   alias which="alias | which --all --tty-only -i --show-dot --show-tilde"
    alias acpi="acpi -cV"
@@ -109,7 +111,7 @@ if [ $OSTYPE = "linux-gnu" ]; then
    alias mkisofs="mkisofs -l -J -r -D -d"
    alias cdrecord="cdrecord -v"
 
-   alias mplayer="mplayer -vo gl -stop-xscreensaver -softvol -softvol-max 2000"
+   alias mplayer="mplayer -vo xv -stop-xscreensaver -softvol -softvol-max 2000"
    alias headphones_on='amixer set Front unmute'
    alias headphones_off='amixer set Front mute'
 else
@@ -138,11 +140,3 @@ alias printcert_der="openssl x509 -text -noout -inform DER -in"
 alias printpkcs10="openssl req -text -noout -in"
 alias printcrl="openssl crl -text -noout -in"
 alias printcrl_der="openssl crl -text -noout -inform DER -in"
-
-if [ $DISPLAY ]; then
-   function emacs
-      {
-      command emacs $* &
-      disown "command emacs"
-      }
-fi

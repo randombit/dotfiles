@@ -1,12 +1,13 @@
 ! emacs, xemacs
 
-Emacs*Background: DarkSlateGray
+!Emacs*Background: DarkSlateGray
+Emacs*Background: #101010
 Emacs*Foreground: Wheat
 Emacs*pointerColor: Orchid
 Emacs*cursorColor: Orchid
 Emacs*bitmapIcon: on
 ! Emacs*font: fixed
-Emacs.font: Bitstream Vera Sans Mono-9
+Emacs.font: Bitstream Vera Sans Mono-10
 Emacs*.geometry: 80x40
 Emacs*.menuBar: on
 Emacs*.toolBar: on

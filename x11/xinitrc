@@ -3,6 +3,11 @@
 makepath=$HOME/conf/bin/makepath
 PATH=$($makepath)
 
+eval $(ssh-agent)
+
+export GPG_TTY=$(tty)
+gpg-agent --daemon
+
 xset m 1 0 
 
 xmodmap -e "keycode 166 = Prior"
@@ -10,9 +15,5 @@ xmodmap -e "keycode 167 = Next"
 
 xscreensaver -no-splash &
 
-if type -p set_background
-then
-  set_background
-fi
+exec ratpoison
 
-exec sawfish

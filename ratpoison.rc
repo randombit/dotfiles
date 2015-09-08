@@ -1,0 +1,10 @@
+#exec rpws init 4 -k
+
+bind e exec emacs
+bind f exec chromium
+
+bind Q quit
+
+set winname class
+
+alias reload exec ratpoison -c "source $HOME/.ratpoisonrc"
