@@ -1,0 +1,10 @@
+#!/bin/perl
+
+$amix = `amixer get Master toggle`;
+
+if ($amix =~ /\[on\]/) {
+    print "Audio on\n";
+}
+else {
+    print "Audio off\n";
+}
