@@ -2,8 +2,11 @@
 
 $amix = `amixer get Master toggle`;
 
+$pct = $amix;
+$pct =~ s/.*Mono: .*\[(\d+)\%\].*/$1/s;
+
 if ($amix =~ /\[on\]/) {
-    print "Audio on\n";
+    print "Audio on: $pct%\n";
 }
 else {
     print "Audio off\n";

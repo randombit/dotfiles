@@ -8,13 +8,16 @@ eval $(ssh-agent -t 600)
 export GPG_TTY=$(tty)
 gpg-agent --daemon
 
-xset m 1 0 
+xset m 2 0
 
 # Map CapsLock to shift
 xmodmap -e "keycode 66 = Shift_L NoSymbol Shift_L"
 xmodmap -e "keycode 166 = Prior"
 xmodmap -e "keycode 167 = Next"
 
+# T410 Windows, Menu keys
+#xmodmap -e "keycode 133 = space"
+#xmodmap -e "keycode 135 = space"
 
 xscreensaver -no-splash &
 

@@ -1,0 +1,50 @@
+#!/bin/python
+
+import sys
+import os
+
+def add_path(pathtype, pathdir):
+    home = os.getenv('HOME')
+
+    if pathdir == ".":
+        pathdir = os.getcwd()
+    elif pathdir[0] != "/":
+        print("Please express '%s' in the form of a question or abs path" % (pathdir))
+        return
+
+    if os.access(pathdir, os.X_OK) == False:
+        print("Warning: can't find '%s' on the current system (adding anyway)" % (pathdir))
+
+    pathdir = pathdir.replace(home, 'HOME')
+
+    pathfile_fsname = "%s/conf/mkpath/%s.conf" % (home, pathtype)
+    pathfile = open(pathfile_fsname)
+    lines = [l.strip() for l in pathfile.readlines()]
+    pathfile.close()
+    if pathfile is None:
+        raise Exception("Failed reading path file %s from %s", pathtype, pathfile_fsname)
+
+    if pathdir in lines:
+        idx = lines.index(pathdir)
+        print("The path %s was already in %s pos %d" % (pathdir, pathfile_fsname, idx))
+        return
+
+    lines.append(pathdir)
+
+    pathfile = open(pathfile_fsname, "w")
+    pathfile.write("\n".join(lines) + "\n")
+    pathfile.close()
+
+def main(args = None):
+    if args is None:
+        args = sys.argv
+
+    if len(args) != 3:
+        print("Usage %s pathtype dir" % (sys.argv[0]))
+        return 1
+
+    add_path(args[1], args[2])
+
+
+if __name__ == '__main__':
+    sys.exit(main())
