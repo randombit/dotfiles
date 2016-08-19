@@ -1,0 +1,3 @@
+#!/bin/sh
+
+ls ~/videos/*.* | shuf | xargs mplayer -fs -softvol-max 300 -softvol

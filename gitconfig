@@ -1,0 +1,15 @@
+[user]
+	email = jack@randombit.net
+	name = Jack Lloyd
+	signingkey = 57123B60
+[push]
+	default = simple
+[commit]
+	gpgsign = true
+
+[transfer]
+        fsckobjects = true
+[fetch]
+        fsckobjects = true
+[receive]
+        fsckObjects = true
