@@ -12,6 +12,8 @@ definekey top XF86AudioMute exec amixer -q set Master toggle; exec amixer -q set
 bind C-r exec psy_time
 #bind C-m exec mplayer /home/jack/video/documentaries/Mucky_Secrets_Lembeh.mp4
 
+bind c exec termite
+
 bind C-a exec ratpoison -c "echo `/bin/acpi`"
 bind F4 exec sudo systemctl suspend
 #bind F5 exec sudo systemctl shutdown
@@ -20,6 +22,12 @@ bind F1 exec scrot 'shots/%Y%m%d_%H%M%S.png'
 bind F11 exec bounce_wifi
 
 bind L exec xscreensaver-command -lock
+
+bind L exec xscreensaver-command -lock
+
+bind q exec quodlibet
+bind p exec pidgin
+bind F1 exec scrot 'var/shots/%Y_%m_%d_%H%M%S.png'
 
 set winname class
 

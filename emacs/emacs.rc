@@ -2,6 +2,7 @@
 
 (setq load-path (cons "~/conf/emacs/" load-path))
 (setq load-path (cons "~/conf/emacs/fsharp-mode" load-path))
+(setq load-path (cons "~/conf/emacs/go-mode.el" load-path))
 (setq load-path (cons "~/conf/emacs/slime-2.0" load-path))
 
 (load "/usr/share/emacs/site-lisp" t)
@@ -21,11 +22,24 @@
       (slime-setup))
   (error nil)))
 
-(defun maybe-broadway-style ()
-   (when (and buffer-file-name (string-match "bway" buffer-file-name))
-     (c-set-style "broadway")))
+(defun maybe-botan-style ()
+   (when (and buffer-file-name (string-match "botan" buffer-file-name))
+     (c-set-style "botan")))
 
-(add-hook 'c++-mode-hook 'maybe-broadway-style)
+; From https://www.emacswiki.org/emacs/UnwrapLine
+(defun unwrap-line ()
+ "Remove all newlines until we get to two consecutive ones.
+  Or until we reach the end of the buffer.
+  Great for unwrapping quotes before sending them on IRC."
+    (interactive)
+    (let ((start (point))
+          (end (copy-marker (or (search-forward "\n\n" nil t)
+                                (point-max))))
+          (fill-column (point-max)))
+      (fill-region start end)
+      (goto-char end)
+      (newline)
+      (goto-char start)))
 
 (semantic-mode 1)
 
@@ -49,7 +63,7 @@
 
 ;(setq track-eol t)
 
-;(global-font-lock-mode -1)
+(global-font-lock-mode -1)
 
 (setq-default indent-tabs-mode nil)
 
@@ -67,7 +81,10 @@
 
 ;(require 'rust-mode)
 ;(require 'clojure-mode)
-;(require 'go-mode)
+(require 'go-mode)
+(require 'go-mode-autoloads)
+
+;(require 'solidity-mode)
 
 (autoload 'fsharp-mode "fsharp" "Major mode for editing F# code." t)
 (autoload 'run-fsharp "inf-fsharp" "Run an inferior F# process." t)

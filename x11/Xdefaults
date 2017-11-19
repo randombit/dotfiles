@@ -24,8 +24,9 @@ xterm*metaSendsEscape: true
 *VT100*eightBitInput:   false
 *VT100*eightBitControl: false
 *VT100*eightBitOutput:  true
+xterm*font:     *-fixed-*-*-*-20-*
 
-XTerm*faceSize: 20
+!XTerm*faceSize: 24
 
 ! XTerm*Title: Terminal
 XTerm*Background: Black

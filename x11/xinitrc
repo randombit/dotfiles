@@ -19,7 +19,10 @@ xmodmap -e "keycode 167 = Next"
 #xmodmap -e "keycode 133 = space"
 #xmodmap -e "keycode 135 = space"
 
+#xrandr --output DP1 --left-of HDMI2 --auto
+
 xscreensaver -no-splash &
 
+redshift &
 exec ratpoison
 
