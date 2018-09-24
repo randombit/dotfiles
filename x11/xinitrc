@@ -8,7 +8,8 @@ eval $(ssh-agent -t 600)
 export GPG_TTY=$(tty)
 gpg-agent --daemon
 
-xset m 2 0
+#xset m 2 0
+xset m 1/10240 0
 
 # Map CapsLock to shift
 xmodmap -e "keycode 66 = Shift_L NoSymbol Shift_L"
@@ -19,7 +20,7 @@ xmodmap -e "keycode 167 = Next"
 #xmodmap -e "keycode 133 = space"
 #xmodmap -e "keycode 135 = space"
 
-#xrandr --output DP1 --left-of HDMI2 --auto
+xrandr --output DP-1 --left-of HDMI-2 --auto
 
 xscreensaver -no-splash &
 

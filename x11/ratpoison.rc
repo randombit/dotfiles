@@ -1,6 +1,7 @@
 #exec rpws init 4 -k
 
-bind f exec chromium
+#bind f exec chromium
+bind f exec firefox
 bind q exec quodlibet
 
 definekey top XF86AudioRaiseVolume exec amixer -q set Master 5+ unmute; ratpoison -c "echo `audio_status`"
@@ -9,12 +10,10 @@ definekey top XF86AudioMute exec amixer -q set Master toggle; exec amixer -q set
 
 #bind F2 exec xscreensaver-command -lock
 
-bind C-r exec psy_time
-#bind C-m exec mplayer /home/jack/video/documentaries/Mucky_Secrets_Lembeh.mp4
-
 bind c exec termite
+bind C-c exec termite
 
-bind C-a exec ratpoison -c "echo `/bin/acpi`"
+bind C-a exec ratpoison -c "echo `/bin/acpi -t`"
 bind F4 exec sudo systemctl suspend
 #bind F5 exec sudo systemctl shutdown
 
@@ -23,10 +22,8 @@ bind F11 exec bounce_wifi
 
 bind L exec xscreensaver-command -lock
 
-bind L exec xscreensaver-command -lock
-
 bind q exec quodlibet
-bind p exec pidgin
+#bind p exec pidgin
 bind F1 exec scrot 'var/shots/%Y_%m_%d_%H%M%S.png'
 
 set winname class

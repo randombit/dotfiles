@@ -1,15 +1,30 @@
 ;; Emacs -*- mode: Lisp -*- code
 
+
+;; Added by Package.el.  This must come before configurations of
+;; installed packages.  Don't delete this line.  If you don't want it,
+;; just comment it out by adding a semicolon to the start of the line.
+;; You may delete these explanatory comments.
+(package-initialize)
+
 (setq load-path (cons "~/conf/emacs/" load-path))
 (setq load-path (cons "~/conf/emacs/fsharp-mode" load-path))
 (setq load-path (cons "~/conf/emacs/go-mode.el" load-path))
+(setq load-path (cons "~/conf/emacs/rust-mode" load-path))
 (setq load-path (cons "~/conf/emacs/slime-2.0" load-path))
+(setq load-path (cons "~/conf/emacs/company-mode" load-path))
+(setq load-path (cons "~/conf/emacs/emacs-racer" load-path))
+
+(load "/sw/tuareg/tuareg-site-file")
 
 (load "/usr/share/emacs/site-lisp" t)
 ;(load "/usr/share/emacs/site-lisp/site-gentoo" t)
 
 (load "jl-utils")
 
+
+(require 'package)
+(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
 
 (setq inferior-lisp-program
   (first-true 'file-executable-p
@@ -79,10 +94,17 @@
 (setq display-time-string-forms '(year "-" month "-" day " " 24-hours ":" minutes))
 (display-time)
 
-;(require 'rust-mode)
+;(require 'company)
+
+;(require 'racer)
+(require 'rust-mode)
 ;(require 'clojure-mode)
 (require 'go-mode)
 (require 'go-mode-autoloads)
+
+(autoload 'rust-mode "rust-mode" nil t)
+;(add-hook 'rust-mode-hook #'racer-mode)
+;(setq racer-cmd "/bin/racer")
 
 ;(require 'solidity-mode)
 
@@ -101,6 +123,7 @@
 (add-mode-alist "\\.cs\\'" 'csharp-mode)
 (add-mode-alist "\\.xml\\'" 'text-mode)
 (add-mode-alist "\\.fs[iylx]?$" 'fsharp-mode)
+(add-mode-alist "\\.rs\\'" 'rust-mode)
 
 (autoload 'fsharp-mode "fsharp" "F# major mode" t)
 (autoload 'inferior-fsharp "inf-fsharp" "Inferior F# process" t)
@@ -118,5 +141,15 @@
 (add-hook 'java-mode-common-hook 'set_styles)
 
 (custom-set-variables
- '(rst-level-face-base-color "null")
-)
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages (quote (racer)))
+ '(rst-level-face-base-color "null"))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
