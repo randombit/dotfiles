@@ -20,7 +20,7 @@ xmodmap -e "keycode 167 = Next"
 #xmodmap -e "keycode 133 = space"
 #xmodmap -e "keycode 135 = space"
 
-xrandr --output DP-1 --left-of HDMI-2 --auto
+xrandr --output HDMI-2 --left-of DPI-1 --auto
 
 xscreensaver -no-splash &
 

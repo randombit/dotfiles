@@ -1,0 +1,6 @@
+[cursor.style]
+blinking = "On"
+shape = "Block"
+
+[font]
+size = 16.0

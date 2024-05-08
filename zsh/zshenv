@@ -11,8 +11,8 @@ export ZSH_DIR=$CONF_DIR/zsh
 export GOPATH=$HOME/opt/go
 
 bindkey -e
-export VISUAL=vim
-export EDITOR=vim
+export VISUAL=emacs
+export EDITOR=emacs
 
 export TMOUT=86400
 export HISTFILE=$LOGDIR/zsh_history.log
@@ -38,7 +38,9 @@ unsetopt nomatch
 
 umask 022
 
-ulimit -S -c unlimited
+#ulimit -S -c unlimited
+ulimit -S -c 0
+ulimit -S -v $((8*1024*1024))
 #ulimit -S -u 1024
 
 if [ $USER = "lloyd" -o $USER = "jlloyd" -o $USER = "randombit" ]; then

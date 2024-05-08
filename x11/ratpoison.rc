@@ -10,8 +10,10 @@ definekey top XF86AudioMute exec amixer -q set Master toggle; exec amixer -q set
 
 #bind F2 exec xscreensaver-command -lock
 
-bind c exec termite
-bind C-c exec termite
+bind c exec alacritty
+bind C-c exec alacritty
+#bind c exec xterm
+#bind C-c exec xterm
 
 bind C-a exec ratpoison -c "echo `/bin/acpi -t`"
 bind F4 exec sudo systemctl suspend

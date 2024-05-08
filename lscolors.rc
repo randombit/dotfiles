@@ -79,6 +79,7 @@ EXEC    1;32
 .tgz       32
 .tbz       32
 .zip       32
+.xz        32
 
 # Object files, etc
 .o         33
