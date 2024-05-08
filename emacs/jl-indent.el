@@ -4,29 +4,28 @@
    (c-basic-offset . 3)
    (c-comment-only-line-offset . 0)
    (c-offsets-alist
-;      (c . c-lineup-C-comments)
-;      (comment-intro . c-lineup-comment)
-
       (c . 0)
       (comment-intro . 0)
 
-      (statement-block-intro . 0)
+      (statement-block-intro . +)
       (statement-cont . +)
 
       (substatement . +)
       (substatement-open . +)
 
-      (block-open . +)
+      (block-open . 0)
       (block-close . 0)
+
+      (case-label . +)
 
       (defun-open . +)
       (defun-close . 0)
-      (defun-block-intro . 0)
+      (defun-block-intro . +)
       (func-decl-cont . +)
 
-      (class-open . +)
-      (class-close . +)
-      (inclass . +)
+      (class-open . 0)
+      (class-close . 0)
+      (inclass . ++)
       (access-label . -)
       (inline-open . +)
       (inline-close . 0)
@@ -41,7 +40,7 @@
       (namespace-close . 0)
       (innamespace . 0)
 
-      (label . 0)
+      (label . +)
       )
 ))
 
@@ -52,18 +51,18 @@
       (c . 0)
       (comment-intro . 0)
 
-      (statement-block-intro . +)
+      (statement-block-intro . 0)
       (statement-cont . +)
 
       (substatement . +)
       (substatement-open . 0)
 
-      (block-open . 0)
+      (block-open . +)
       (block-close . 0)
 
       (defun-open . 0)
       (defun-close . 0)
-      (defun-block-intro . +)
+      (defun-block-intro . ++)
       (func-decl-cont . +)
 
       (case-label . 3)
