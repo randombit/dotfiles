@@ -3,7 +3,7 @@
 makepath=$HOME/conf/bin/makepath
 PATH=$($makepath)
 
-eval $(ssh-agent -t 600)
+eval $(ssh-agent -t 3h)
 
 export GPG_TTY=$(tty)
 gpg-agent --daemon
@@ -12,18 +12,17 @@ gpg-agent --daemon
 xset m 1/10240 0
 
 # Map CapsLock to shift
-xmodmap -e "keycode 66 = Shift_L NoSymbol Shift_L"
-xmodmap -e "keycode 166 = Prior"
-xmodmap -e "keycode 167 = Next"
+#xmodmap -e "keycode 66 = Shift_L NoSymbol Shift_L"
+#xmodmap -e "keycode 166 = Prior"
+#xmodmap -e "keycode 167 = Next"
 
 # T410 Windows, Menu keys
 #xmodmap -e "keycode 133 = space"
 #xmodmap -e "keycode 135 = space"
 
-xrandr --output HDMI-2 --left-of DPI-1 --auto
+#xrandr --output HDMI-2 --left-of DPI-1 --auto
 
 xscreensaver -no-splash &
 
-redshift &
+redshift -l 44:-72 &
 exec ratpoison
-

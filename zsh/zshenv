@@ -11,8 +11,8 @@ export ZSH_DIR=$CONF_DIR/zsh
 export GOPATH=$HOME/opt/go
 
 bindkey -e
-export VISUAL=emacs
-export EDITOR=emacs
+export VISUAL=emacs-nox
+export EDITOR=emacs-nox
 
 export TMOUT=86400
 export HISTFILE=$LOGDIR/zsh_history.log

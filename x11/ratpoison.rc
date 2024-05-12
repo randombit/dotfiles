@@ -15,17 +15,16 @@ bind C-c exec alacritty
 #bind c exec xterm
 #bind C-c exec xterm
 
-bind C-a exec ratpoison -c "echo `/bin/acpi -t`"
+bind C-a exec ratpoison -c "echo `/bin/acpi -b`"
 bind F4 exec sudo systemctl suspend
 #bind F5 exec sudo systemctl shutdown
 
 bind F1 exec scrot 'shots/%Y%m%d_%H%M%S.png'
-bind F11 exec bounce_wifi
+#bind F11 exec bounce_wifi
 
 bind L exec xscreensaver-command -lock
 
 bind q exec quodlibet
-#bind p exec pidgin
 bind F1 exec scrot 'var/shots/%Y_%m_%d_%H%M%S.png'
 
 set winname class

@@ -1,4 +1,4 @@
-#!/usr/bin/python2
+#!/usr/bin/python
 
 import sys
 import datetime
@@ -14,7 +14,7 @@ def main(args = None):
 
     delta = then - now
 
-    print delta.days
+    print(delta.days)
 
     return 0
 
