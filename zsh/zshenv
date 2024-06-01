@@ -16,7 +16,7 @@ export EDITOR=emacs-nox
 
 export TMOUT=86400
 export HISTFILE=$LOGDIR/zsh_history.log
-export HISTSIZE=100000
+export HISTSIZE=1000000
 export SAVEHIST=$HISTSIZE
 
 export TMPPREFIX=$TMPDIR/zsh
@@ -43,11 +43,7 @@ ulimit -S -c 0
 ulimit -S -v $((8*1024*1024))
 #ulimit -S -u 1024
 
-if [ $USER = "lloyd" -o $USER = "jlloyd" -o $USER = "randombit" ]; then
-   export PS1="(%m %~)%(!.#.$) "
-else
-   export PS1="(%n@%m %~)%(!.#.$) "
-fi
+export PS1="(%n@%m %~)%(!.#.$) "
 
 export DATE_DEFAULT_FORMAT="%H:%M:%S %Y-%m-%d"
 
@@ -120,6 +116,7 @@ if [ $OSTYPE = "linux-gnu" ]; then
    alias mplayer="mplayer -vo xv -stop-xscreensaver -softvol -softvol-max 2000"
    alias headphones_on='amixer set Front unmute'
    alias headphones_off='amixer set Front mute'
+   alias valgrind='valgrind --enable-debuginfod=no'
 else
    alias ls="ls -F"
    alias bc="bc -l"

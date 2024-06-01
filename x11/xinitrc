@@ -3,7 +3,7 @@
 makepath=$HOME/conf/bin/makepath
 PATH=$($makepath)
 
-eval $(ssh-agent -t 3h)
+eval $(ssh-agent -t 5h)
 
 export GPG_TTY=$(tty)
 gpg-agent --daemon
