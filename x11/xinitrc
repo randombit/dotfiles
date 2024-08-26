@@ -3,7 +3,7 @@
 makepath=$HOME/conf/bin/makepath
 PATH=$($makepath)
 
-eval $(ssh-agent -t 5h)
+eval $(ssh-agent -t 12h)
 
 export GPG_TTY=$(tty)
 gpg-agent --daemon
@@ -21,6 +21,9 @@ xset m 1/10240 0
 #xmodmap -e "keycode 135 = space"
 
 #xrandr --output HDMI-2 --left-of DPI-1 --auto
+#xrandr --output HDMI-1 --auto --right-of eDP-1
+
+xrdb -merge ~/.Xresources
 
 xscreensaver -no-splash &
 

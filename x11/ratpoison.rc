@@ -19,13 +19,11 @@ bind C-a exec ratpoison -c "echo `/bin/acpi -b`"
 bind F4 exec sudo systemctl suspend
 #bind F5 exec sudo systemctl shutdown
 
-bind F1 exec scrot 'shots/%Y%m%d_%H%M%S.png'
-#bind F11 exec bounce_wifi
-
 bind L exec xscreensaver-command -lock
 
 bind q exec quodlibet
-bind F1 exec scrot 'var/shots/%Y_%m_%d_%H%M%S.png'
+bind F1 exec scrot -M 1 'var/shots/%Y_%m_%d_%H%M%S.png'
+bind F2 exec scrot -s 'var/shots/%Y_%m_%d_%H%M%S.png'
 
 set winname class
 

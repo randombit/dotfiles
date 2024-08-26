@@ -11,8 +11,8 @@ export ZSH_DIR=$CONF_DIR/zsh
 export GOPATH=$HOME/opt/go
 
 bindkey -e
-export VISUAL=emacs-nox
-export EDITOR=emacs-nox
+export VISUAL=emacs
+export EDITOR=emacs
 
 export TMOUT=86400
 export HISTFILE=$LOGDIR/zsh_history.log
@@ -40,7 +40,7 @@ umask 022
 
 #ulimit -S -c unlimited
 ulimit -S -c 0
-ulimit -S -v $((8*1024*1024))
+#ulimit -S -v $((8*1024*1024))
 #ulimit -S -u 1024
 
 export PS1="(%n@%m %~)%(!.#.$) "
@@ -94,8 +94,8 @@ if [ $OSTYPE = "linux-gnu" ]; then
 
    alias bc="bc -q -l"
    alias du="du -sc -h"
-#   alias df="df -T -h -x devtmpfs -x tmpfs"
-  alias df="df -T -h"
+   alias df="df -T -h -x devtmpfs -x tmpfs"
+#  alias df="df -T -h"
    alias free="free -mt"
 
    alias less='less --no-lessopen -n'
